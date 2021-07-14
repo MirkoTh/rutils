@@ -1,0 +1,13 @@
+Package: rutils
+Type: Package
+Title: Mirko Thalmann's R utils
+Version: 0.1.0
+Author: Mirko Thalmann
+Maintainer: The package maintainer <mirkothalmann@hotmail.com>
+Description: A collection of utility functions applicable for several topics as
+    Bayesian Inference
+    Preprocessing of Datasets
+License: GPL (>=2)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
