@@ -11,8 +11,9 @@ sd_bfs <- function(tbl, params_bf, scale) {
   #' @importFrom tibble as_tibble
   #' @importFrom reshape melt
   #' @importFrom dplyr mutate select group_by ungroup
-  #' @importFrom purrr map
-  #' @importFrom tidyr pivot_wider
+  #' @importFrom purrr map map_df
+  #' @importFrom tidyr pivot_wider pivot_longer
+  #' @importFrom kde1d qkde1d dkde1d
   #'
   #' @export
   tbl_chains <- tbl %>%
@@ -25,9 +26,18 @@ sd_bfs <- function(tbl, params_bf, scale) {
     select(-rwn) %>%
     ungroup()
 
-  kdes <- tbl_chains %>%
-    map(kde1d) %>%
+  kdes <- tbl_chains %>% map(kde1d)
+
+  par_lims <- kdes %>% map_df(~ qkde1d(c(.0025, .9975), .))
+  par_lims$variable <- c("thxhi", "thxlo")
+  par_lims <- par_lims %>%
+    pivot_longer(
+      cols = names(.)[names(.) != "variable"],
+      names_to = "parameter"
+    )
+
+  bfs <- kdes %>%
     map_dbl(~ (dt(0, 1, 1) * scale) / dkde1d(0, .))
 
-  return(kdes)
+  return(list(bfs, par_lims))
 }
