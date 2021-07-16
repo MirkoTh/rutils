@@ -29,7 +29,13 @@ sd_bfs <- function(tbl, params_bf, scale) {
   kdes <- tbl_chains %>% map(kde1d)
 
   par_lims <- kdes %>% map_df(~ qkde1d(c(.0025, .9975), .))
-  par_lims$variable <- c("thxhi", "thxlo")
+  par_lims$variable <- c("thxlo_x", "thxhi_x")
+  max_d <- kdes %>% map_df(~ dkde1d(qkde1d(.5, .), .))
+  max_d$variable <- "max_dens"
+  zero_d <- kdes %>% map_df(~ dkde1d(0, .))
+  zero_d$variable <- "zero_dens"
+  par_lims <- rbind(par_lims, max_d, zero_d)
+
   par_lims <- par_lims %>%
     pivot_longer(
       cols = names(.)[names(.) != "variable"],
