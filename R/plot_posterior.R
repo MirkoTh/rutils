@@ -1,11 +1,11 @@
-plot_post_bf_sd <- function(param, tbl, tbl_thx, bfs) {
-  #' @name plot_post_bf_sd
-  #' @title plot posterior density and Bayes factor
-  #' @description plot posterior density and Bayes factor; adapt coordinate system to posterior
+plot_posterior <- function(param, tbl, tbl_thx, bfs = NULL) {
+  #' @name plot_posterior
+  #' @title plot posterior density and optionally Bayes factor
+  #' @description plot posterior density and optionally Bayes factor; adapt coordinate system to posterior
   #' @param param a string stating which parameter of tbl should be plotted
   #' @param tbl a tibble with the posterior samples containing columns chain (-nr), parameter, and value in long format
   #' @param tbl_thx a tibble with the thresholds for plotting into nicely fitting coordinates
-  #' @param bfs the Bayes factors for the corresponding posteriors
+  #' @param bfs the Bayes factors for the corresponding posteriors; default to NULL
   #' @return the ggplot object
   #'
   #' @importFrom magrittr `%>%`
@@ -22,7 +22,6 @@ plot_post_bf_sd <- function(param, tbl, tbl_thx, bfs) {
     max(.01, thxs$value[thxs$variable == "thxhi_x"]) -
       min(-.01, thxs$value[thxs$variable == "thxlo_x"])
   )
-  bf <- bfs[param]
 
   pl <- ggplot() +
     geom_density(data = tbl, aes(value)) +
@@ -30,14 +29,6 @@ plot_post_bf_sd <- function(param, tbl, tbl_thx, bfs) {
       x = 0, xend = 0,
       y = 0, yend = zero_dens
     ), color = "red") +
-    geom_label(aes(
-      x = min(0, thxs$value[thxs$variable == "thxlo_x"]) +
-        (pl_width / 4), y = max_dens / 2,
-      label = str_c(
-        "BF10 = ", format(round(bf, 3), big.mark = "'"),
-        "\nBF01 = ", format(round(1/bf, 3), big.mark = "'")
-      )
-    )) +
     coord_cartesian(
       xlim = c(
         min(-.01, thxs$value[thxs$variable == "thxlo_x"]),
@@ -51,5 +42,18 @@ plot_post_bf_sd <- function(param, tbl, tbl_thx, bfs) {
       y = "Posterior Density"
     )
 
-  pl
+  if (!is.null(bfs)) {
+    bf <- bfs[param]
+    pl <- pl  +
+      geom_label(aes(
+        x = min(0, thxs$value[thxs$variable == "thxlo_x"]) +
+          (pl_width / 4), y = max_dens / 2,
+        label = str_c(
+          "BF10 = ", format(round(bf, 3), big.mark = "'"),
+          "\nBF01 = ", format(round(1/bf, 3), big.mark = "'")
+        )
+      ))
+  }
+
+  return(pl)
 }
