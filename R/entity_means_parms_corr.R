@@ -4,7 +4,7 @@ entity_means_parms_corr <- function(tbl_chains, param_single, entity_param) {
   #' @description by-entity mean aggregation of multivariate (posterior) distribution
   #' @param tbl_chains tibble with chains of all model parameters
   #' @param param_single a string stating the name of the parameter to be extracted
-  #' @param entity_param a string stating the name of the entity to be extracted 
+  #' @param entity_param a string stating the name of the entity to be extracted
   #' (e.g., "subjects", "items")
   #' @return the by-entity mean aggregated (posterior) parameters
   #'
@@ -14,8 +14,8 @@ entity_means_parms_corr <- function(tbl_chains, param_single, entity_param) {
   #' @importFrom tidyr pivot_wider
   #'
   #' @export
-  
-  tbl_chains %>% 
+
+  tbl_chains %>%
     filter(str_detect(parameter, str_c("^", param_single))) %>%
     group_by(parameter) %>%
     summarize(
@@ -33,6 +33,9 @@ entity_means_parms_corr <- function(tbl_chains, param_single, entity_param) {
       names_from = parameter_id,
       names_prefix = param_single,
       values_from = value
+    ) %>%
+    mutate(
+      entity = entity_param
     )
-  
+
 }
