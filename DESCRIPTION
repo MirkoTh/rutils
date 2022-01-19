@@ -3,6 +3,16 @@ Type: Package
 Title: Mirko Thalmann's R utils
 Version: 0.1.0
 Author: Mirko Thalmann
+Imports:
+    dplyr,
+    ggplot2,
+    kde1d,
+    magrittr,
+    purrr,
+    reshape,
+    stringr,
+    tibble,
+    tidyr
 Maintainer: The package maintainer <mirkothalmann@hotmail.com>
 Description: A collection of utility functions applicable for several topics as
     Bayesian Inference
