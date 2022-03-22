@@ -9,3 +9,8 @@ load_all()
 roxygen2::roxygenize()
 
 build_vignettes()
+
+require(renv)
+devtools::install("C:\\Users\\mthalmann\\Documents\\R-packages")
+
+
