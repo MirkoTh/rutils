@@ -20,7 +20,7 @@ estimate_kd <- function(tbl, params_req) {
     ) %>% select(-chain) %>%
     group_by(parameter) %>%
     mutate(rwn = row_number()) %>%
-    pivot_wider(names_from = parameter, values_from = value) %>%
+    pivot_wider(names_from = parameter, values_from = value, names_sort = TRUE) %>%
     select(-rwn) %>%
     ungroup()
 
