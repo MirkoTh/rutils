@@ -1,10 +1,11 @@
-sd_bfs <- function(tbl, params_bf, scale) {
+sd_bfs <- function(tbl, params_bf, scale, limits = c(.0025, .9975)) {
   #' @name sd_bfs
   #' @title Bayes factors using Savage Dickey density ratio
   #' @description calculate BFs for a given set of parameters
   #' @param tbl the posterior samples for the model parameters in long format
   #' @param params_bf a vector with the names of the parmaeters to calculate the BFs
   #' @param scale the scaling of the Student's t distribution
+  #' @param limits limits of HDI
   #' @return the BFs for the required parameters
   #'
   #' @importFrom magrittr `%>%`
@@ -14,7 +15,7 @@ sd_bfs <- function(tbl, params_bf, scale) {
   #' @export
 
   kdes <- estimate_kd(tbl, params_bf)
-  par_lims <- limit_axes(kdes)
+  par_lims <- limit_axes(kdes, limits = limits)
 
   bfs <- kdes %>%
     map_dbl(~ (dt(0, 1, 1) * scale) / dkde1d(0, .))

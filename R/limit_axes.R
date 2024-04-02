@@ -1,8 +1,9 @@
-limit_axes <- function(kdes) {
+limit_axes <- function(kdes, limits = c(.0025, .9975)) {
   #' @name limit_axes
   #' @title calculate enveloping coordinates for uni-variate (posterior) samples
   #' @description calculate space around a posterior distribution to be plotted nicely
   #' @param kdes kde objects
+  #' @param limits upper and lower limit of HDI
   #' @return the four required x and y coordinates
   #'
   #' @importFrom magrittr `%>%`
@@ -12,7 +13,7 @@ limit_axes <- function(kdes) {
   #'
   #' @export
 
-  par_lims <- kdes %>% map_df(~ qkde1d(c(.0025, .9975), .))
+  par_lims <- kdes %>% map_df(~ qkde1d(limits, .))
   par_lims$variable <- c("thxlo_x", "thxhi_x")
   max_d <- kdes %>% map_df(~ dkde1d(qkde1d(.5, .), .))
   max_d$variable <- "max_dens"
