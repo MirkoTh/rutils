@@ -13,4 +13,3 @@ build_vignettes()
 require(renv)
 devtools::install("C:\\Users\\mthalmann\\Documents\\R-packages")
 devtools::install("C:\\Users\\Mirko\\Documents\\programming\\R\\rutils")
-
